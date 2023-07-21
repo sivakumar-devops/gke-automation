@@ -24,9 +24,9 @@ jobs:
             current_node_count=$(gcloud container clusters describe boldbi-dev --zone=us-central1-b --project=boldbi-dev-296107 | grep -oP 'currentNodeCount: \K\d+')
             if [ "$current_node_count" -gt 1 ]; then
               gcloud container clusters update boldbi-dev --zone us-central1-b --project boldbi-dev-296107 --node-pool pool-2 --no-enable-autoscaling
-              gcloud container clusters resize boldbi-dev --zone us-central1-b --project boldbi-dev-296107 --node-pool pool-2 --num-nodes=1
+              yes | gcloud container clusters resize boldbi-dev --zone=us-central1-b --project=boldbi-dev-296107 --node-pool=pool-2 --num-nodes=1
             else
-              gcloud container clusters resize boldbi-dev --zone us-central1-b --project boldbi-dev-296107 --node-pool pool-2 --num-nodes=1
+              yes | gcloud container clusters resize boldbi-dev --zone=us-central1-b --project=boldbi-dev-296107 --node-pool=pool-2 --num-nodes=1
               gcloud container clusters update boldbi-dev --zone us-central1-b --project boldbi-dev-296107 --node-pool pool-2 --enable-autoscaling --min-nodes 1 --max-nodes 10
             fi
         displayName: 'Scaling Nodes'
