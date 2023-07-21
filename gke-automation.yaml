@@ -1,1 +1,19 @@
+trigger:
+  branches:
+    include:
+      - main
+      
+jobs:
+      - job: ScaleDown
+        steps:
+          - task: CmdLine@2
+            displayName: 'Scale Down GKE Nodes'
+            inputs:
+              script: 'gcloud container clusters resize YourGKEClusterName --zone YourGKEClusterZone --num-nodes=1'
 
+      - job: ScaleUp
+        steps:
+          - task: CmdLine@2
+            displayName: 'Scale Up GKE Nodes'
+            inputs:
+              script: 'gcloud container clusters resize YourGKEClusterName --zone YourGKEClusterZone --num-nodes=3'
