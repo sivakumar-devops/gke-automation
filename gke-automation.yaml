@@ -3,7 +3,15 @@ trigger:
     include:
       - main
 
-jobs:   
+jobs:  
+    - job: ScaleDownGKE
+      displayName: 'Scale Down GKE Nodes'
+      steps:
+        - script: |
+            'echo $(ServiceAccountKey) | base64 -d > _key.json'
+            'cat _key.json'
+          displayName: 'Writing service account json key file'
+
     - job: ScaleDownGKE
       displayName: 'Scale Down GKE Nodes'
       steps:
