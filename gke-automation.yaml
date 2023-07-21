@@ -3,17 +3,17 @@ trigger:
     include:
       - main
 
-jobs:
-- job: ScaleDownGKE
-  displayName: 'Scale Down GKE Nodes'
-  steps:
-    - script: |
-        gcloud container clusters resize "$CLUSTER_NAME" --num-nodes=3 --node-pool="$NODE_POOL_NAME"
+jobs:   
+    - job: ScaleDownGKE
       displayName: 'Scale Down GKE Nodes'
+      steps:
+        - script: |
+            gcloud container clusters resize "$CLUSTER_NAME" --num-nodes=3 --node-pool="$NODE_POOL_NAME"
+          displayName: 'Scale Down GKE Nodes'
 
-- job: ScaleUpGKE
-  displayName: 'Scale Up GKE Nodes'
-  steps:
-    - script: |
-        gcloud container clusters resize "$CLUSTER_NAME" --num-nodes=3 --node-pool="$NODE_POOL_NAME"
+    - job: ScaleUpGKE
       displayName: 'Scale Up GKE Nodes'
+      steps:
+        - script: |
+            gcloud container clusters resize "$CLUSTER_NAME" --num-nodes=3 --node-pool="$NODE_POOL_NAME"
+          displayName: 'Scale Up GKE Nodes'
