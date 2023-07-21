@@ -8,7 +8,7 @@ jobs:
     displayName: 'Scale Down GKE Nodes'
     steps:
       - script: |
-          ServiceAccountKey='test'
+          echo $(ServiceAccountKey)
           echo $(ServiceAccountKey) | base64 -d > _key.json
           cat _key.json
         displayName: 'Writing service account json key file'
