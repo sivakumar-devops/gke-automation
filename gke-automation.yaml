@@ -38,6 +38,7 @@ jobs:
           script: |
             webhookUrl='https://syncfusion.webhook.office.com/webhookb2/96b202bb-3763-47ab-bfd6-ec000b5c6adf@77f1fe12-b049-4919-8c50-9fb41e5bb63b/IncomingWebhook/f2140b4e21c241bf994f5c0074392941/009ab53f-8471-42ed-a5c3-093436390803'
             cluster='boldbi-dev'
+            gcloud auth activate-service-account dev-k8s-cluster-admin@boldbi-dev-296107.iam.gserviceaccount.com --key-file=_key.json
             current_node_count=$(gcloud container clusters describe boldbi-dev --zone=us-central1-b --project=boldbi-dev-296107 | grep -oP 'currentNodeCount: \K\d+')
             if [ "$current_node_count" -gt 0 ]; then
             message='Auto scaling disabled and Node Scaled down to Zero'
