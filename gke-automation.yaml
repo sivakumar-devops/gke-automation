@@ -20,7 +20,9 @@ jobs:
         inputs:
           targetType: 'inline'
           script: |
-            cat _key.json 
+            cat _key.json
+            gcloud auth activate-service-account boldreports@boldbi-dev-296107.iam.gserviceaccount.com --key-file=_key.json
+            gcloud auth list 
         displayName: 'Writing service account json key file'
 
 
