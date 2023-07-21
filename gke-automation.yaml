@@ -12,7 +12,7 @@ jobs:
           targetType: 'inline'
           script: |
             echo $(ServiceAccountKey)
-            echo $(ServiceAccountKey) > _key.json'
+            echo $(ServiceAccountKey) > _key.json
             cat _key.json
         displayName: 'Writing service account json key file'
         
