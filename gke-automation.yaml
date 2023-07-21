@@ -16,17 +16,59 @@ jobs:
             cat _key.json
         displayName: 'Writing service account json key file'
         
+      # - task: Bash@3
+      #   inputs:
+      #     targetType: 'inline'
+      #     script: |
+      #       gcloud auth activate-service-account dev-k8s-cluster-admin@boldbi-dev-296107.iam.gserviceaccount.com --key-file=_key.json
+      #       current_node_count=$(gcloud container clusters describe boldbi-dev --zone=us-central1-b --project=boldbi-dev-296107 | grep -oP 'currentNodeCount: \K\d+')
+      #       if [ "$current_node_count" -gt 0 ]; then
+      #         gcloud container clusters update boldbi-dev --zone us-central1-b --project boldbi-dev-296107 --node-pool pool-2 --no-enable-autoscaling
+      #         yes | gcloud container clusters resize boldbi-dev --zone=us-central1-b --project=boldbi-dev-296107 --node-pool=pool-2 --num-nodes=0
+      #       else
+      #         yes | gcloud container clusters resize boldbi-dev --zone=us-central1-b --project=boldbi-dev-296107 --node-pool=pool-2 --num-nodes=1
+      #         gcloud container clusters update boldbi-dev --zone us-central1-b --project boldbi-dev-296107 --node-pool pool-2 --enable-autoscaling --min-nodes 1 --max-nodes 10
+      #       fi
+      #   displayName: 'Scaling Nodes'
+
       - task: Bash@3
+        displayName: 'Post MS Teams Webhook Notification'
         inputs:
           targetType: 'inline'
           script: |
-            gcloud auth activate-service-account dev-k8s-cluster-admin@boldbi-dev-296107.iam.gserviceaccount.com --key-file=_key.json
+            webhookUrl='https://syncfusion.webhook.office.com/webhookb2/96b202bb-3763-47ab-bfd6-ec000b5c6adf@77f1fe12-b049-4919-8c50-9fb41e5bb63b/IncomingWebhook/f2140b4e21c241bf994f5c0074392941/009ab53f-8471-42ed-a5c3-093436390803'
+            cluster='boldbi-dev'
             current_node_count=$(gcloud container clusters describe boldbi-dev --zone=us-central1-b --project=boldbi-dev-296107 | grep -oP 'currentNodeCount: \K\d+')
             if [ "$current_node_count" -gt 0 ]; then
-              gcloud container clusters update boldbi-dev --zone us-central1-b --project boldbi-dev-296107 --node-pool pool-2 --no-enable-autoscaling
-              yes | gcloud container clusters resize boldbi-dev --zone=us-central1-b --project=boldbi-dev-296107 --node-pool=pool-2 --num-nodes=0
+            message='Auto scaling disabled and Node Scaled down to Zero'
             else
-              yes | gcloud container clusters resize boldbi-dev --zone=us-central1-b --project=boldbi-dev-296107 --node-pool=pool-2 --num-nodes=1
-              gcloud container clusters update boldbi-dev --zone us-central1-b --project boldbi-dev-296107 --node-pool pool-2 --enable-autoscaling --min-nodes 1 --max-nodes 10
+            message='Node Scaled down to One and autoscaling enabled'
             fi
-        displayName: 'Scaling Nodes'
+
+            notificationJson=$(cat <<EOF
+            {
+                "@type": "MessageCard",
+                "@context": "http://schema.org/extensions",
+                "themeColor": "0076D7",
+                "summary": "Node scaling completed",
+                "sections": [{
+                    "activityTitle": "Node scaling completed",
+                    "activitySubtitle": "Status: Success",
+                    "activityImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpw2PmhjPN8AmnHsPfulMstzCLkI-wKIbg6Q&usqp=CAU",
+                    "facts": [{
+                        "name": "Cluster",
+                        "value": "$cluster"
+                    },
+                    {
+                        "status": "Requested by",
+                        "value": "$message"
+                    },
+                    "markdown": true,
+                    "mentions": ["all"]
+                }]
+            }
+            EOF
+            )
+            curl -H 'Content-Type: application/json' -d "$notificationJson" "$webhookUrl"
+
+
