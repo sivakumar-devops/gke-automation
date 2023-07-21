@@ -15,4 +15,15 @@ jobs:
             echo $(ServiceAccountKey) > _key.json
             cat _key.json
         displayName: 'Writing service account json key file'
+        
+      - task: Bash@3
+        inputs:
+          targetType: 'inline'
+          script: |
+            gcloud auth activate-service-account --key-file=_key.json
+            gcloud container clusters describe boldbi-dev      --zone us-central1-b | grep currentNodeCount
+            gcloud container clusters resize "$CLUSTER_NAME" --num-nodes=3 --node-pool="$NODE_POOL_NAME"
+        displayName: 'Writing service account json key file'
+
+
 
