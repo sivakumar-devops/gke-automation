@@ -11,24 +11,7 @@ jobs:
     displayName: 'Scale Down GKE Nodes'
     steps:
       - script: |
+          ServiceAccountKey='test'
           echo $(ServiceAccountKey) | base64 -d > _key.json
           cat _key.json
         displayName: 'Writing service account json key file'
-
-      - script: |
-          gcloud auth activate-service-account --key-file=_key.json
-          gcloud container clusters resize "$CLUSTER_NAME" --num-nodes=3 --node-pool="$NODE_POOL_NAME"
-        displayName: 'Scale Down GKE Nodes'
-
-  - job: ScaleUpGKE
-    displayName: 'Scale Up GKE Nodes'
-    steps:
-      - script: |
-          echo $(ServiceAccountKey) | base64 -d > _key.json
-          cat _key.json
-        displayName: 'Writing service account json key file'
-
-      - script: |
-          gcloud auth activate-service-account --key-file=_key.json
-          gcloud container clusters resize "$CLUSTER_NAME" --num-nodes=3 --node-pool="$NODE_POOL_NAME"
-        displayName: 'Scale Up GKE Nodes'
