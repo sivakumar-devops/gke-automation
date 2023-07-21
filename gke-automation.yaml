@@ -3,17 +3,36 @@ trigger:
     include:
       - main
 
-jobs:   
-    - job: ScaleDownGKE
-      displayName: 'Scale Down GKE Nodes'
-      steps:
-        - script: |
-            gcloud container clusters resize "$CLUSTER_NAME" --num-nodes=3 --node-pool="$NODE_POOL_NAME"
-          displayName: 'Scale Down GKE Nodes'
+variables:
+- group: azure-deployments-example
 
-    - job: ScaleUpGKE
+steps:
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: 'echo $(ServiceAccountKey) | base64 -d > _key.json'
+
+- task: GoogleCloudSdkInstaller@0
+  inputs:
+    version: '291.0.0'
+
+- task: GcloudRunner@0
+  inputs:
+    command: 'auth activate-service-account'
+    arguments: '--key-file _key.json'
+  displayName: 'gcloud auth activate-service-account'
+
+jobs:
+- job: ScaleDownGKE
+  displayName: 'Scale Down GKE Nodes'
+  steps:
+    - script: |
+        gcloud container clusters resize "$CLUSTER_NAME" --num-nodes=3 --node-pool="$NODE_POOL_NAME"
+      displayName: 'Scale Down GKE Nodes'
+
+- job: ScaleUpGKE
+  displayName: 'Scale Up GKE Nodes'
+  steps:
+    - script: |
+        gcloud container clusters resize "$CLUSTER_NAME" --num-nodes=3 --node-pool="$NODE_POOL_NAME"
       displayName: 'Scale Up GKE Nodes'
-      steps:
-        - script: |
-            gcloud container clusters resize "$CLUSTER_NAME" --num-nodes=3 --node-pool="$NODE_POOL_NAME"
-          displayName: 'Scale Up GKE Nodes'
