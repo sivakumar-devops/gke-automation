@@ -22,7 +22,7 @@ jobs:
           script: |
             cat _key.json
             gcloud auth activate-service-account boldreports@boldbi-dev-296107.iam.gserviceaccount.com --key-file=_key.json
-            gcloud container clusters describe boldbi-dev      --zone us-central1-b | grep currentNodeCount 
+            gcloud container clusters describe boldbi-dev --zone us-central1-b --project=	boldbi-dev-296107 | grep currentNodeCount 
         displayName: 'Writing service account json key file'
 
 
