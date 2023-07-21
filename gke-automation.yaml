@@ -45,33 +45,7 @@ jobs:
             message='Node Scaled down to One and autoscaling enabled'
             fi	
             curl -H 'Content-Type: application/json' \
-              -d "$(generate_post_data)" \
+              -d "$message" \
               https://syncfusion.webhook.office.com/webhookb2/96b202bb-3763-47ab-bfd6-ec000b5c6adf@77f1fe12-b049-4919-8c50-9fb41e5bb63b/IncomingWebhook/f2140b4e21c241bf994f5c0074392941/009ab53f-8471-42ed-a5c3-093436390803
-
-            generate_post_data()
-            {
-              cat <<EOF
-            {
-              "@type": "MessageCard",
-              "@context": "http://schema.org/extensions",
-              "themeColor": "0076D7",
-              "summary": "Node scaling completed",
-              "sections": [{
-                "activityTitle": "Node scaling completed",
-                    "activitySubtitle": "Status: Success",
-                "activityImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpw2PmhjPN8AmnHsPfulMstzCLkI-wKIbg6Q&usqp=CAU",
-                "facts": [{
-                  "name": "Cluster",
-                  "value": "$cluster"
-                },
-                    {
-                  "name": "Requested by",
-                  "value": "$engineer"
-                },
-                "markdown": true
-              }]
-            }
-            EOF
-            }
 
 
