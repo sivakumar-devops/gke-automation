@@ -4,7 +4,7 @@ trigger:
       - main
 
 jobs:  
-  - job: ScaleDownGKE
+  - job: ScalingGKENodes
     displayName: 'Scale Down GKE Nodes'
     steps:
       - task: Bash@3
