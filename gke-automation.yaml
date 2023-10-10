@@ -25,10 +25,10 @@ jobs:
             echo $current_node_count
             
             if [ "$current_node_count" -gt 0 ]; then
-              gcloud container clusters update development --zone us-central1-b --project boldbi-dev-296107 --node-pool pool-2 --no-enable-autoscaling
-              yes | gcloud container clusters resize development --zone=us-central1-b --project=boldbi-dev-296107 --node-pool=pool-2 --num-nodes=0
+              gcloud container clusters update development --zone us-central1-b --project boldbi-dev-296107 --node-pool development-pool --no-enable-autoscaling
+              yes | gcloud container clusters resize development --zone=us-central1-b --project=boldbi-dev-296107 --node-pool=development-pool --num-nodes=0
             else
-              yes | gcloud container clusters resize development --zone=us-central1-b --project=boldbi-dev-296107 --node-pool=pool-2 --num-nodes=1
-              gcloud container clusters update development --zone us-central1-b --project boldbi-dev-296107 --node-pool pool-2 --enable-autoscaling --min-nodes 1 --max-nodes 10
+              yes | gcloud container clusters resize development --zone=us-central1-b --project=boldbi-dev-296107 --node-pool=development-pool --num-nodes=1
+              gcloud container clusters update development --zone us-central1-b --project boldbi-dev-296107 --node-pool development-pool --enable-autoscaling --min-nodes 1 --max-nodes 10
             fi
         displayName: 'Scaling Nodes'
