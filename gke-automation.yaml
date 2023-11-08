@@ -23,10 +23,6 @@ jobs:
             gcloud auth activate-service-account dev-k8s-cluster-admin@boldbi-dev-296107.iam.gserviceaccount.com --key-file=_key.json
             current_node_count=$(gcloud container clusters describe development --zone=us-central1-b --project=boldbi-dev-296107 | grep -oP 'currentNodeCount: \K\d+')
             echo $current_node_count            
-            if [ "$current_node_count" -gt 0 ]; then
               gcloud container clusters update development --zone us-central1-b --project boldbi-dev-296107 --node-pool development-pool --no-enable-autoscaling
               yes | gcloud container clusters resize development --zone=us-central1-b --project=boldbi-dev-296107 --node-pool=development-pool --num-nodes=0
-            else
-              gcloud container clusters update development --zone us-central1-b --project boldbi-dev-296107 --node-pool development-pool --enable-autoscaling --min-nodes 1 --max-nodes 10
-            fi
         displayName: 'Scaling Nodes'
